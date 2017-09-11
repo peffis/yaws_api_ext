@@ -16,8 +16,8 @@ appmod. Typically you end up implementing some state machine for this like:
 ```erlang
 out(#arg{state=undefined, clidata = Data} = A)
   when is_binary(Data) -> %% size of post < partial_post_size
-    InitialState = init_state(Data),
-    finalize_upload(InitialState, A);
+    InitialState = init_state(),
+    finalize_upload(process_data(Data, InitialState), A);
 
 
 out(#arg{state=undefined, clidata = {partial, Data}})
