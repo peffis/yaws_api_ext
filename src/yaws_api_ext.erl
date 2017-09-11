@@ -2,14 +2,14 @@
 
 -export([handle_large_body/5]).
 
--include("deps/yaws/include/yaws_api.hrl").
+-include_lib("yaws/include/yaws_api.hrl").
 
 
 %% the body was not contained in the initial chunk 
 handle_large_body(UserArgs, #arg{state=undefined, clidata=D} = YawsArg, 
 		  InitState, ProcessPiece, Finalize) when is_binary(D) ->
     
-    InitialState = InitState(YawsArg, UserArgs),
+    InitialState = InitState(D, YawsArg, UserArgs),
     FinalState = ProcessPiece(D, InitialState, UserArgs, YawsArg),
     Finalize(FinalState, UserArgs, YawsArg);
     
@@ -18,7 +18,7 @@ handle_large_body(UserArgs,
 		  #arg{state=undefined, clidata={partial, D}} = YawsArg, 
 		  InitState, ProcessPiece, _Finalize) when is_binary(D) ->
 
-    InitialState = InitState(YawsArg, UserArgs),
+    InitialState = InitState(D, YawsArg, UserArgs),
     NextState = ProcessPiece(D, InitialState, UserArgs, YawsArg),
     {get_more, undefined, NextState};
 
