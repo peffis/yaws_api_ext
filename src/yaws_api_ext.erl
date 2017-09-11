@@ -26,13 +26,15 @@ handle_large_body(UserArgs,
 handle_large_body(UserArgs, 
 		  #arg{state=State, clidata={partial, D}} = YawsArg, 
 		  _, ProcessPiece, _) when is_binary(D) ->
+
     NextState = ProcessPiece(D, State, UserArgs, YawsArg),
     {get_more, undefined, NextState};
 
 %% last piece of upload
 handle_large_body(UserArgs, 
-		 #arg{state=State, clidata=D} = YawsArg, 
-		 _, ProcessPiece, Finalize) when is_binary(D) ->
+		  #arg{state=State, clidata=D} = YawsArg, 
+		  _, ProcessPiece, Finalize) when is_binary(D) ->
+
     FinalState = ProcessPiece(D, State, UserArgs, YawsArg),
     Finalize(FinalState, UserArgs, YawsArg). 
 
