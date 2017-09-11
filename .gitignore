@@ -1,0 +1,6 @@
+.erlang.mk/
+*~
+deps/
+ebin/
+test_app/
+yaws_api_ext.d
