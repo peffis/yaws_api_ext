@@ -45,11 +45,7 @@ So instead of the four clauses above you would write one clause with
 something like: 
 ```erlang
 out(A) ->
-  yaws_api_ext:handle_large_body([], 
-                                 A, 
-                                 fun init_state/2, 
-                                 fun process_data/4, 
-				 fun finalize_upload/3).
+  yaws_api_ext:handle_large_body([], A, fun init_state/2, fun process_data/4, fun finalize_upload/3).
 ```
 
 
