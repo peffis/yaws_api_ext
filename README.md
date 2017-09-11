@@ -1,15 +1,16 @@
 yaws_api_ext
 ============
 
-Some conveniant additions to the Yaws api
-(http://yaws.hyber.org/yman.yaws?page=yaws.api). Yaws is an HTTP
+Yaws is an HTTP
 server/library for Erlang. If you are not using it you are likely not
 very interested in this library. 
+This library is a collection of some conveniant additions to the Yaws api
+(http://yaws.hyber.org/yman.yaws?page=yaws.api). 
 
 Additions in this library
 -------------------------
 handle_large_body - Large bodies sent to Yaws are split up into
-several calls to your out function that you implement in your
+several calls to your out function in your
 appmod. Typically you end up implementing some state machine for this like:
 
 ```erlang
