@@ -3,9 +3,9 @@ yaws_api_ext
 
 Yaws is an HTTP
 server/library for Erlang. If you are not using it you are likely not
-very interested in this library. 
+very interested in this library.
 This library is a collection of some conveniant additions to the Yaws api
-(http://yaws.hyber.org/yman.yaws?page=yaws.api). 
+(http://yaws.hyber.org/yman.yaws?page=yaws.api).
 
 Additions in this library
 -------------------------
@@ -34,19 +34,19 @@ out(#arg{state = State, clidata = {partial, Data}})
 out(#arg{state = State, clidata = Data} = A)
   when is_binary(Data) -> %% last piece of chunked upload
     finalize_upload(process_data(Data, State), A);
-			
+
 ```
 
 If you have many different places where you handle large uploads like
 these you realize you are copying and pasting these four clauses over
 and over. Therefore a conveniant layer was introduced for this in this
-library called handle_large_body. 
+library called handle_large_body.
 
 So instead of the four clauses above you would write one clause with
-something like: 
+something like:
 ```erlang
 out(A) ->
-  yaws_api_ext:handle_large_body([], A, fun init_state/2, fun process_data/4, fun finalize_upload/3).
+  yaws_api_ext:handle_large_body(A, undef, fun init_state/2, fun process_data/4, fun finalize_upload/3).
 ```
 
 
@@ -58,30 +58,29 @@ argument to the three callback functions)
 different chunks - this call takes the Yaws arg and the UserArgs as
 argument)
 - process_data (should process the incoming data chunk and return the
-next state - this function receives the data, the state, the UserArgs
-and the Yaws arg as argument)
+next state - this function receives the data and the state as arguments)
 - finalize_upload (this is called when there will be no chunks
-delivered and we have the final state - the arguments are the Final
-State, the UserArg and the YawsArg. 
+delivered and we have the final state - the argument is the Final
+State).
 
 
-Example: 
+Example:
 ```erlang
 -record(test_state, {chunks = []}).
 
 out(A) ->
-    yaws_api_ext:handle_large_body([],
-                                   A,
+    yaws_api_ext:handle_large_body(A, undefined,
 
                                    fun(_, _) ->
                                            #test_state{}
                                    end,
 
-                                   fun(D, #test_state{chunks = Cs} = S, _, _) ->
+                                   fun(D, #test_state{chunks = Cs} = S) ->
                                            S#test_state{chunks = [D | Cs]}
                                    end,
 
-                                   fun(#test_state{chunks = Cs}, _, _) ->
-                                           file:write_file("/tmp/out.txt", lists:reverse(Cs))
+                                   fun(#test_state{chunks = Cs}) ->
+                                           file:write_file("/tmp/out.txt", lists:reverse(Cs)),
+                                           {status, 200}
                                    end).
 ```
