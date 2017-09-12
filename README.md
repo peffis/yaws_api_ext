@@ -52,9 +52,9 @@ out(A) ->
 
 The arguments to handle_large_body/5 are:
 - UserData (this is any user data that the user wants to be added as
-argument to the three callback functions)
+argument to init_state callback function when it is later evaluated)
 - A (the Yaws arg record of the request)
-- init_state (should return the state you need to keep between
+- init_state (should return the initial state you need to keep between
 different chunks - this call takes the Yaws arg and the UserArgs as
 argument)
 - process_data (should process the incoming data chunk and return the
