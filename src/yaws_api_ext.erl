@@ -6,7 +6,7 @@
 -include_lib("yaws/include/yaws_api.hrl").
 
 
-%% the body was not contained in the initial chunk
+%% the body was contained in the initial chunk
 handle_large_body(#arg{state=undefined, clidata=D}, InitialState, ProcessPiece, Finalize)
   when is_binary(D) ->
 
