@@ -63,11 +63,6 @@ next state - this function receives the data and the state as arguments)
 delivered and we have the final state - the argument is the Final
 State).
 
-There is also a handle_large_body/4 that you can use if your initial
-state does not have to be computed and can be given directly. Then you
-do not supply the UserArg and instead of a fun to compute the initial
-state you simply supply your initial state.
-
 Example:
 ```erlang
 -record(test_state, {chunks = []}).
@@ -78,6 +73,29 @@ out(A) ->
                                    fun(_, _) ->
                                            #test_state{}
                                    end,
+
+                                   fun(D, #test_state{chunks = Cs} = S) ->
+                                           S#test_state{chunks = [D | Cs]}
+                                   end,
+
+                                   fun(#test_state{chunks = Cs}) ->
+                                           file:write_file("/tmp/out.txt", lists:reverse(Cs)),
+                                           {status, 200}
+                                   end).
+```
+
+
+There is also a handle_large_body/4 that you can use if your initial
+state does not have to be computed and can be given directly. Then you
+do not supply the UserArg and instead of a fun to compute the initial
+state you simply supply your initial state.
+
+Example:
+```erlang
+-record(test_state, {chunks = []}).
+
+out(A) ->
+    yaws_api_ext:handle_large_body(A, #test_state{},
 
                                    fun(D, #test_state{chunks = Cs} = S) ->
                                            S#test_state{chunks = [D | Cs]}
