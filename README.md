@@ -50,7 +50,7 @@ out(A) ->
 ```
 
 
-The arguments to handle_large_body are:
+The arguments to handle_large_body/5 are:
 - UserData (this is any user data that the user wants to be added as
 argument to the three callback functions)
 - A (the Yaws arg record of the request)
@@ -63,6 +63,10 @@ next state - this function receives the data and the state as arguments)
 delivered and we have the final state - the argument is the Final
 State).
 
+There is also a handle_large_body/4 that you can use if your initial
+state does not have to be computed and can be given directly. Then you
+do not supply the UserArg and instead of a fun to compute the initial
+state you simply supply your initial state.
 
 Example:
 ```erlang
